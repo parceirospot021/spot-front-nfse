@@ -31,6 +31,7 @@ interface IParams {
   tomador: string;
   cnpj_tomador: string;
   search: string;
+  chave_acesso: string;
 }
 
 
@@ -328,6 +329,24 @@ function App() {
                 }
               />
           </Grid2>
+
+          <Grid2 size={12} pt={3}>
+              <Controller
+                control={filterFakeHook.control}
+                name={'chave_acesso'}
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                  <TextField
+                    onChange={(e)=>onChange(allowOnlyNumber(e.target.value))}
+                    value={value}
+                    fullWidth
+                    label="Chave de acesso"
+                    error={!!error}
+                    size='small'
+                  />
+                )}
+              />
+
+          </Grid2>
           
       </Grid2>
               
@@ -424,7 +443,8 @@ function App() {
       field: 'ref_dataEmissao', 
       headerName: 'Data Emissão', 
       width: 130,
-      renderCell: (param) => moment(param.row?.ref_dataEmissao).utc().format('DD/MM/YYYY[ ]HH:mm:ss')
+      //@ts-ignore
+      renderCell: (param) => moment(param.row?.ref_dataEmissao).utc(-3).format('DD/MM/YYYY[ ]HH:mm:ss')
       // valueGetter: (value) => moment(value).utc().format('DD/MM/YYYY[ ]HH:mm:ss'),
     },
     { field: 'status', headerName: 'Situação', width: 130 },
@@ -600,7 +620,8 @@ function App() {
       serie, 
       status, 
       tomador,
-      cnpj_prestador
+      cnpj_prestador,
+      chave_acesso
      } = filterHook.getValues();
     let newStatus = status == 'Todos' ? '' : status;
     setIsLoading(true);
@@ -610,7 +631,7 @@ function App() {
     const endDate = moment(finalDate).utc().toISOString()
 
 
-    axios.get(`${import.meta.env.VITE_API}/api/nfse?search=${search || ''}&serie=${serie || ''}&initialRps=${initialRps || ''}&finalRps=${finalRps || ''}&initialNfse=${initialNfse || ''}&finalNfse=${finalNfse || ''}&initialDate=${startDate || ''}&finalDate=${endDate || ''}&municipio=${municipio || ''}&cnpj_prestador=${cnpj_prestador || ''}&cnpj_tomador=${cnpj_tomador || ''}&status=${newStatus || ''}&tomador=${tomador || ''}&prestador=${prestador || ''}
+    axios.get(`${import.meta.env.VITE_API}/api/nfse?search=${search || ''}&serie=${serie || ''}&initialRps=${initialRps || ''}&finalRps=${finalRps || ''}&initialNfse=${initialNfse || ''}&finalNfse=${finalNfse || ''}&initialDate=${startDate || ''}&finalDate=${endDate || ''}&municipio=${municipio || ''}&cnpj_prestador=${cnpj_prestador || ''}&cnpj_tomador=${cnpj_tomador || ''}&status=${newStatus || ''}&tomador=${tomador || ''}&prestador=${prestador || ''}&chave_acesso=${chave_acesso || ''}
       `)
       // &limit=${paginationModel.pageSize}&page=${paginationModel.page+1}
     .then(({data}) => {
@@ -629,7 +650,7 @@ function App() {
   const getExcelUniqueRow = (chave_acesso: string) => {
       setIsLoading(true);
      axios
-     .get(`${import.meta.env.VITE_API}/api/nfse-export?chave_acesso=${chave_acesso}`, {
+     .get(`${import.meta.env.VITE_API}/api/nfse-export?unique=${chave_acesso}`, {
       responseType: 'blob'
      })
      .then((response) => {
@@ -661,7 +682,8 @@ function App() {
       serie, 
       status, 
       tomador,
-      cnpj_prestador
+      cnpj_prestador,
+      chave_acesso
      } = filterHook.getValues();
      setIsFetchingExcel(true);
      let newStatus = status == 'Todos' ? '' : status;
@@ -673,7 +695,7 @@ function App() {
     const prestador_cnpj = String(cnpj_prestador).replace(/\D/g, '');
     const tomador_cnpj = String(cnpj_tomador).replace(/\D/g, '');
 
-    axios.get(`${import.meta.env.VITE_API}/api/nfse-export?search=${search || ''}&serie=${serie || ''}&initialRps=${initialRps || ''}&finalRps=${finalRps || ''}&initialNfse=${initialNfse || ''}&finalNfse=${finalNfse || ''}&initialDate=${startDate || ''}&finalDate=${endDate || ''}&municipio=${municipio || ''}&cnpj_prestador=${prestador_cnpj || ''}&cnpj_tomador=${tomador_cnpj || ''}&status=${newStatus || ''}&tomador=${tomador || ''}&prestador=${prestador || ''}
+    axios.get(`${import.meta.env.VITE_API}/api/nfse-export?search=${search || ''}&serie=${serie || ''}&initialRps=${initialRps || ''}&finalRps=${finalRps || ''}&initialNfse=${initialNfse || ''}&finalNfse=${finalNfse || ''}&initialDate=${startDate || ''}&finalDate=${endDate || ''}&municipio=${municipio || ''}&cnpj_prestador=${prestador_cnpj || ''}&cnpj_tomador=${tomador_cnpj || ''}&status=${newStatus || ''}&tomador=${tomador || ''}&prestador=${prestador || ''}&chave_acesso=${chave_acesso || ''}
       `, {
         responseType: 'blob'
       })
