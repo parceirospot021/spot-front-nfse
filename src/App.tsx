@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
-import { PiMicrosoftExcelLogoLight } from 'react-icons/pi';
+import { PiMicrosoftExcelLogoLight, PiSpinner } from 'react-icons/pi';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
@@ -83,6 +83,7 @@ function App() {
     rowsCount: undefined
   });
   const [state, setState] = useState(false);
+  const [isFetchingExcel, setIsFetchingExcel] = useState(false);
 
   const debounce = (id: string, func: any, timeout = 1000) => {
       return (...args: any) => {
@@ -662,6 +663,7 @@ function App() {
       tomador,
       cnpj_prestador
      } = filterHook.getValues();
+     setIsFetchingExcel(true);
      let newStatus = status == 'Todos' ? '' : status;
     //@ts-ignore
     const startDate = moment(initialDate).utc().toISOString();
@@ -684,6 +686,8 @@ function App() {
         link.click();
     }).catch(err => {
       console.log(err);
+    }).finally(() => {
+      setIsFetchingExcel(false);
     })
   }
 
@@ -811,16 +815,22 @@ function App() {
                   </Button>
                 </Box>
               </Box>
-
-                <PiMicrosoftExcelLogoLight 
-                  
-                  size={50} style={{cursor: 'pointer', margin: 0, marginTop: 8, color: '#008000', opacity: !rows.data.length ? 0.4 : 1}} 
-                  onClick={() => {
-                    if(rows.data.length){
-                      getExcelAllRows();
-                    }
-                  }}
-                />
+                <Box display={'flex'} gap={'8px'} alignItems={'center'}>
+                  {isFetchingExcel ? <div className='loader'></div> : ''}
+                  <PiMicrosoftExcelLogoLight 
+                    
+                    size={50} style={{
+                      cursor: 'pointer', 
+                      margin: 0, marginTop: 8, color: '#008000', opacity: (!rows.data.length || isFetchingExcel) ? 0.4 : 1,
+                      pointerEvents: isFetchingExcel ? 'none' : 'auto'
+                    }} 
+                    onClick={() => {
+                      if(rows.data.length && !isFetchingExcel){
+                        getExcelAllRows();
+                      }
+                    }}
+                  />
+                </Box>
             </Box>
             <DataTable />
           </Box>
