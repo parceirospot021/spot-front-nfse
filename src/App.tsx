@@ -609,7 +609,7 @@ function App() {
     const endDate = moment(finalDate).utc(-3).toISOString()
 
 
-    axios.get(`${import.meta.env.VITE_API}/api/nfse?search=${search || ''}&serie=${serie || ''}&initialRps=${initialRps || ''}&finalRps=${finalRps || ''}&initialNfse=${initialNfse || ''}&finalNfse=${finalNfse || ''}&initialDate=${startDate || ''}&finalDate=${finalDate || ''}&municipio=${municipio || ''}&cnpj_prestador=${cnpj_prestador || ''}&cnpj_tomador=${cnpj_tomador || ''}&status=${newStatus || ''}&tomador=${tomador || ''}&prestador=${prestador || ''}
+    axios.get(`${import.meta.env.VITE_API}/api/nfse?search=${search || ''}&serie=${serie || ''}&initialRps=${initialRps || ''}&finalRps=${finalRps || ''}&initialNfse=${initialNfse || ''}&finalNfse=${finalNfse || ''}&initialDate=${startDate || ''}&finalDate=${endDate || ''}&municipio=${municipio || ''}&cnpj_prestador=${cnpj_prestador || ''}&cnpj_tomador=${cnpj_tomador || ''}&status=${newStatus || ''}&tomador=${tomador || ''}&prestador=${prestador || ''}
       `)
       // &limit=${paginationModel.pageSize}&page=${paginationModel.page+1}
     .then(({data}) => {
@@ -671,7 +671,7 @@ function App() {
     const prestador_cnpj = String(cnpj_prestador).replace(/\D/g, '');
     const tomador_cnpj = String(cnpj_tomador).replace(/\D/g, '');
 
-    axios.get(`${import.meta.env.VITE_API}/api/nfse-export?search=${search || ''}&serie=${serie || ''}&initialRps=${initialRps || ''}&finalRps=${finalRps || ''}&initialNfse=${initialNfse || ''}&finalNfse=${finalNfse || ''}&initialDate=${startDate || ''}&finalDate=${finalDate || ''}&municipio=${municipio || ''}&cnpj_prestador=${prestador_cnpj || ''}&cnpj_tomador=${tomador_cnpj || ''}&status=${newStatus || ''}&tomador=${tomador || ''}&prestador=${prestador || ''}
+    axios.get(`${import.meta.env.VITE_API}/api/nfse-export?search=${search || ''}&serie=${serie || ''}&initialRps=${initialRps || ''}&finalRps=${finalRps || ''}&initialNfse=${initialNfse || ''}&finalNfse=${finalNfse || ''}&initialDate=${startDate || ''}&finalDate=${endDate || ''}&municipio=${municipio || ''}&cnpj_prestador=${prestador_cnpj || ''}&cnpj_tomador=${tomador_cnpj || ''}&status=${newStatus || ''}&tomador=${tomador || ''}&prestador=${prestador || ''}
       `, {
         responseType: 'blob'
       })
