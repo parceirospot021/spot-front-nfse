@@ -604,9 +604,9 @@ function App() {
     let newStatus = status == 'Todos' ? '' : status;
     setIsLoading(true);
     //@ts-ignore
-    const startDate = moment(initialDate).utc(-3).toISOString();
+    const startDate = moment(initialDate).utc().toISOString();
     //@ts-ignore
-    const endDate = moment(finalDate).utc(-3).toISOString()
+    const endDate = moment(finalDate).utc().toISOString()
 
 
     axios.get(`${import.meta.env.VITE_API}/api/nfse?search=${search || ''}&serie=${serie || ''}&initialRps=${initialRps || ''}&finalRps=${finalRps || ''}&initialNfse=${initialNfse || ''}&finalNfse=${finalNfse || ''}&initialDate=${startDate || ''}&finalDate=${endDate || ''}&municipio=${municipio || ''}&cnpj_prestador=${cnpj_prestador || ''}&cnpj_tomador=${cnpj_tomador || ''}&status=${newStatus || ''}&tomador=${tomador || ''}&prestador=${prestador || ''}
@@ -664,9 +664,9 @@ function App() {
      } = filterHook.getValues();
      let newStatus = status == 'Todos' ? '' : status;
     //@ts-ignore
-    const startDate = moment(initialDate).utc(-3).toISOString();
+    const startDate = moment(initialDate).utc().toISOString();
     //@ts-ignore
-    const endDate = moment(finalDate).utc(-3).toISOString();
+    const endDate = moment(finalDate).utc().toISOString();
 
     const prestador_cnpj = String(cnpj_prestador).replace(/\D/g, '');
     const tomador_cnpj = String(cnpj_tomador).replace(/\D/g, '');
